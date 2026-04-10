@@ -1,5 +1,5 @@
 import { test as setup } from '@playwright/test';
-import user from '../.auth/user.json';
+// import user from '../.auth/user.json';
 import fs from 'fs';
 
 const authFile = '.auth/user.json';
@@ -18,10 +18,32 @@ setup('authentication', async ({ page, request }) => {
     data: { "user": { "email": "esra@gmail.com", "password": "esra1234" } }
   })
 
-  const responseBody = await response.json();
-  const accessToken = responseBody.user.token;
-  user.origins[0].localStorage[0].value = accessToken;
-  fs.writeFileSync(authFile, JSON.stringify(user))
+  // const responseBody = await response.json();
+  // const accessToken = responseBody.user.token;
+  // user.origins[0].localStorage[0].value = accessToken;
+  // fs.writeFileSync(authFile, JSON.stringify(user))
 
-  process.env['ACCESS_TOKEN'] = accessToken
+  // process.env['ACCESS_TOKEN'] = accessToken
+
+  const responseBody = await response.json();
+  const token = responseBody.user.token;
+
+  // Playwright storageState
+  const storageState = {
+    cookies: [],
+    origins: [
+      {
+        origin: 'https://conduit.bondaracademy.com',
+        localStorage: [
+          {
+            name: 'jwt',
+            value: token,
+          },
+        ],
+      },
+    ],
+  };
+
+  fs.mkdirSync('.auth', { recursive: true });
+  fs.writeFileSync(authFile, JSON.stringify(storageState, null, 2));
 })
