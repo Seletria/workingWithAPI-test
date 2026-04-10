@@ -52,5 +52,8 @@ setup('authentication', async ({ request }) => {
     ]
   };
 
+  // Ensure the .auth directory exists
+  fs.mkdirSync('.auth', { recursive: true });
+
   fs.writeFileSync(authFile, JSON.stringify(storageState));
 });
