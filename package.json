@@ -1,0 +1,19 @@
+{
+  "name": "apitest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "pageObjects-chrome": "npx playwright test workingWithAPI.spec.js --project=chromium",
+    "pageObjects-firefox": "npx playwright test workingWithAPI.spec.js --project=firefox"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.5.2"
+  }
+}
