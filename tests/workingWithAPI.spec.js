@@ -2,6 +2,19 @@ import { test, expect, request } from '@playwright/test';
 import tags from '../test-data/tags.json'
 import fs from 'fs';
 
+const getAuthToken = () => {
+  try {
+    if (fs.existsSync('.auth/user.json')) {
+      const authData = JSON.parse(fs.readFileSync('.auth/user.json', 'utf8'));
+      return authData.origins[0].localStorage[0].value;
+    }
+  } catch (e) {
+    // File doesn't exist in CI environment
+  }
+  // Fallback to environment variable in CI
+  return process.env.AUTH_TOKEN || '';
+};
+
 test.beforeEach(async ({ page }) => {
   //mocking api
   await page.route('*/**/api/tags', async route => {
@@ -41,8 +54,7 @@ test('Mock etiketler arayüzde doğru şekilde listelenmeli', async ({ page }) =
 
 /////delete
 test('delete article', async ({ page, request }) => {
-  const authData = JSON.parse(fs.readFileSync('.auth/user.json', 'utf8'));
-  const token = authData.origins[0].localStorage[0].value;
+  const token = getAuthToken();
 
   const articleResponse = await request.post('https://conduit-api.bondaracademy.com/api/articles/', {
     data: {
@@ -71,8 +83,7 @@ test('delete article', async ({ page, request }) => {
 
 
 test('create article', async ({ page, request }) => {
-  const authData = JSON.parse(fs.readFileSync('.auth/user.json', 'utf8'));
-  const token = authData.origins[0].localStorage[0].value;
+  const token = getAuthToken();
 
   const articleTitle = 'Playwright is awesome ' + Date.now();
 

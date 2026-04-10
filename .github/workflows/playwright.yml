@@ -16,7 +16,9 @@ jobs:
     - name: Install dependencies
       run: npm ci 
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps 
+      run: npx playwright install --with-deps
+    - name: Get Auth Token
+      run: npx playwright test auth.setup.js
     - name: Run Playwright tests
       run: npm run pageObjects-chrome
     - uses: actions/upload-artifact@v4
